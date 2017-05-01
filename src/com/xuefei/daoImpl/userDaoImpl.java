@@ -9,13 +9,13 @@ import java.util.List;
 
 import com.xuefei.dao.userDao;
 import com.xuefei.entity.user;
-import com.xuefei.util.jdbcUtil;
+import com.xuefei.util.JdbcUtil;
 
 public class userDaoImpl implements userDao {
 
 	@Override
 	public List<user> findAll() {
-		Connection con = jdbcUtil.getConnect();
+		Connection con = JdbcUtil.getConnect();
 		List<user> list=new ArrayList<user>();
 		PreparedStatement psm = null;
 		ResultSet rst =null;
@@ -36,14 +36,14 @@ public class userDaoImpl implements userDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			jdbcUtil.close(rst, psm, con);
+			JdbcUtil.close(rst, psm, con);
 		}
 		return list;		
 	}
 
 	@Override
 	public user findUser(String name, String password) {
-		Connection con = jdbcUtil.getConnect();
+		Connection con = JdbcUtil.getConnect();
 		PreparedStatement psm = null;
 		ResultSet rst =null;
 		String sql="SELECT * FROM USER WHERE NAME=? AND PASSWORD=?";
@@ -65,7 +65,7 @@ public class userDaoImpl implements userDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			jdbcUtil.close(rst,psm,con);
+			JdbcUtil.close(rst,psm,con);
 		}
 		return u;
 	}

@@ -1,42 +1,52 @@
 package com.xuefei.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+
+
+
+
+
+
+
+
+
+
+
 import java.util.Properties;
 
-public class jdbcUtil {
-	private static String url=null;
-	private static String user=null;
-	private static String password=null;
-	private static String driverclass=null;
-	
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp.BasicDataSourceFactory;
+
+public class JdbcUtil {
+	private static BasicDataSource bds=null;
 	static{
-		try {			
-			InputStream in = jdbcUtil.class.getResourceAsStream("/jdbc.properties");
-			Properties pro = new Properties();
+		InputStream in = JdbcUtil.class.getResourceAsStream("/jdbc.properties");
+		Properties pro = new Properties();
+			try {
 				pro.load(in);
-				url=pro.getProperty("url");
-				user=pro.getProperty("user");
-				password=pro.getProperty("password");
-				driverclass=pro.getProperty("driverclass");
-			Class.forName(driverclass);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-	}
-	
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+			try {
+				bds=(BasicDataSource) BasicDataSourceFactory.createDataSource(pro);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	}	
 	public static Connection getConnect(){
-		Connection con=null;
+		Connection conn =null;
 		try {
-			con = DriverManager.getConnection(url, user, password);
+			conn = bds.getConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return con;
+		return conn;
 	}
 
 	public static void close(PreparedStatement pst,Connection con){
